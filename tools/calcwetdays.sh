@@ -2,10 +2,10 @@
 
 # ---
 
-datadir=/group/esd_kaplan/datasets/ModelE/climategenerator_data/climatology_1961-1990
-codedir=/data/akoch/lpjlm/LPJ_climategenerator/LPJ_climategenerator_code/tools
+datadir=/group/esd_kaplan/datasets/ModelE/climategenerator_data/4xCO2/rawdata/climean
+codedir=/home/akoch/scripts/LPJ_climategenerator/tools
 coeffile=$codedir/pre2wet_coeffs_rotated.nc
-
+suffix=_CEN_Clim_2900-2999.aijE2p1_anl_4xCO2.nc
 #for exp in RCP26 RCP45 RCP60 RCP85
 #do
 #
@@ -20,9 +20,9 @@ coeffile=$codedir/pre2wet_coeffs_rotated.nc
 #
 #done
 
-prefile=$datadir/prec_GISS-E2-R_climatology_1961-1990.nc
-preaccfile=$datadir/preacc_GISS-E2-R_climatology_1961-1990.nc
-outfile=$datadir/wetd_GISS-E2-R_climatology_1961-1990.nc
+prefile=$datadir/prec$suffix
+preaccfile=$datadir/preacc$suffix
+outfile=$datadir/wetd$suffix
 
 cdo muldpm $prefile $preaccfile
 

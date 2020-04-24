@@ -29,14 +29,14 @@
 varnamesp=(tsurf dtdiurn preacc wetd wsurf pcldt lightning)
 
 # baseline file names
-varnamesb=(tas dtr preacc wetd sfcWind clt lightning)
+varnamesb=(tas dtr preacc wetdays sfcWind clt lightning)
 
-prefixp=/group/esd_kaplan/datasets/ModelE/climategenerator_data/021ka/rawdata/climean
+prefixp=/group/esd_kaplan/datasets/ModelE/climategenerator_data/4xCO2/rawdata/climean
 prefixb=/group/esd_kaplan/datasets/ModelE/climategenerator_data/climatology_1961-1990
-prefixo=/group/esd_kaplan/datasets/ModelE/climategenerator_data/021ka/anomalies_1961-1990
+prefixo=/group/esd_kaplan/datasets/ModelE/climategenerator_data/4xCO2/anomalies_1961-1990
 
 suffix6190=_GISS-E2-R_climatology_1961-1990.nc
-suffixpaleo=_CEN_Clim_2900-2999.aijE2p1_anl_21kGLAC.nc
+suffixpaleo=_CEN_Clim_2900-2999.aijE2p1_anl_4xCO2.nc
 suffixo=_GISS-E2-R_anomaly.nc
 
 # generate anomalies

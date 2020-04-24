@@ -1,0 +1,39 @@
+netcdf wetdays {
+dimensions:
+	lon = 144 ;
+	lat = 90 ;
+	bnds = 2 ;
+	time = UNLIMITED ;
+variables:
+	double lon(lon) ;
+		lon:bounds = "lon_bnds" ;
+		lon:units = "degrees_east" ;
+		lon:axis = "X" ;
+		lon:long_name = "longitude" ;
+		lon:standard_name = "longitude" ;
+	double lon_bnds(lon, bnds) ;
+	double lat(lat) ;
+		lat:bounds = "lat_bnds" ;
+		lat:units = "degrees_north" ;
+		lat:axis = "Y" ;
+		lat:long_name = "latitude" ;
+		lat:standard_name = "latitude" ;
+	double lat_bnds(lat, bnds) ;
+	double time(time) ;
+		time:bounds = "time_bnds" ;
+		time:units = "days since 1850-01-01 00:00:00" ;
+		time:calendar = "365_day" ;
+		time:axis = "T" ;
+		time:long_name = "time" ;
+		time:standard_name = "time" ;
+	double time_bnds(time, bnds) ;
+	float wetdays(time, lat, lon) ;
+		wetdays:long_name = "days with measurable precipitation" ;
+		wetdays:units = "days" ;
+		wetdays:_FillValue = -9999.f ;
+
+// global attributes:
+		:Conventions = "COARDS, CF-1.5" ;
+		:title = "wet days estimated from precipitation" ;
+		:node_offset = 1 ;
+}

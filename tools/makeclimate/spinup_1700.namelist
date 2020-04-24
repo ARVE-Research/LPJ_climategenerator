@@ -1,0 +1,13 @@
+&joboptions
+timeslice = .true.
+numyrs    = 1020
+basefile  = '/soge-home/users/cenv0668/arve/datasets/climate/ICECAP/baseline_spinup/baseline_1701-1730.nc'
+anompath  = '/soge-home/users/cenv0668/arve/datasets/climate/reanalysis20c/anomalies/detrended/30m/'
+tmpfile   = 'air.2m.mon.mean.nc'
+dtrfile   = 'dtr.2m.mon.mean.nc'
+prefile   = 'prec.mon.mean.nc'
+cldfile   = 'tcdc.eatm.mon.mean.nc'
+wndfile   = 'wspd.10m.mon.mean.nc'
+wetfile   = 'wetdays.mon.nc'
+capefile  = 'cape.mon.mean.nc'
+/

@@ -8,8 +8,8 @@ clim=$2
 for var in tas dtr preacc wetdays clt sfcWind lightning
 do
 
-  infile=$var$exp
-  climfile=$var$clim
+  infile=${var}${exp}
+  climfile=${var}${clim}
 
   baseline=../../../climatology_1961-1990/$climfile
 

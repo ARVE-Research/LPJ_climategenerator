@@ -1,6 +1,7 @@
 program calc_wetdays
 
 ! ifort -xHost -o calcwetdays calcwetdays.f90 -I/share1/netcdf/4.7.1-impi/include -L/share1/netcdf/4.7.1-impi/lib -lnetcdff -lnetcdf
+! gfortran -o calcwetdays calcwetdays.f90 -I/home/public/easybuild/software/netCDF-Fortran/4.5.2-gompi-2020a/include -L/home/public/easybuild/software/netCDF-Fortran/4.5.2-gompi-2020a/lib -lnetcdff -lnetcdf
 
 use netcdf
 use iso_fortran_env, only : real32,real64
@@ -86,13 +87,13 @@ write(0,*)'get coeffs',xlen,ylen
 allocate(k0(xlen,ylen,12))
 allocate(k1(xlen,ylen,12))
 
-status = nf90_inq_varid(ifid,'k0',varid)
+status = nf90_inq_varid(ifid,'k0',varid) !a
 if (status /= nf90_noerr) call handle_err(status)
 
 status = nf90_get_var(ifid,varid,k0)
 if (status /= nf90_noerr) call handle_err(status)
 
-status = nf90_inq_varid(ifid,'k1',varid)
+status = nf90_inq_varid(ifid,'k1',varid) !b
 if (status /= nf90_noerr) call handle_err(status)
 
 status = nf90_get_var(ifid,varid,k1)
@@ -259,7 +260,7 @@ do t = 1,tlen,12
     
         if (prec(x,y,m) >= 0.) then
       
-          exponent = -1. * k0(x,y,m) * prec(x,y,m)
+          exponent = -1. * k0(x,y,m) * prec(x,y,m) 
      
           wetf = (1. - exp(exponent))**k1(x,y,m)
         

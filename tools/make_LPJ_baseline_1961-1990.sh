@@ -1,25 +1,22 @@
 #!/bin/bash
-# to be run from Timeseries folder
-
 # extract 1961-1990 from baseline simulations and do ymonmean
 exp=$1
 clim=$2
+cmip=$3
 
 # paleo file names
-varnamesp=(tsurf_aij dtdiurn_aij wsurf_aij pcldt_aij MCamFX_aijl Pressure_aij prec_aij)
-# varnamesp=(tsurf dtdiurn preacc wetd wsurf pcldt lighting)
+varnamesp=(tas dtr preacc wetd sfcWind clt lightning)
 
 # baseline file names
-varnamesb=(tas dtr sfcWind clt MCamFX Pressure prec)
-# varnamesb=(tas dtr preacc wetdays sfcWind clt lightning)
+varnamesb=(tas dtr preacc wetdays sfcWind clt lightning)
 
-for ((i=0;i<=7;i++))
+for i in "${!varnamesp[@]}"
 	do
 
 			infile=${varnamesp[$i]}$exp
 			outfile=${varnamesb[$i]}$clim
 
-			outfile=../../climategenerator_data/climatology_1961-1990/$outfile
+			outfile=/group/esd_kaplan/datasets/ModelE/climategenerator_data/climatology_1961-1990/$cmip/$outfile
 
 			echo $infile $outfile
 

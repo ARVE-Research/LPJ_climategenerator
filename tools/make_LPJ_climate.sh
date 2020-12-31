@@ -1,16 +1,5 @@
 #!/bin/bash
 
-# GISS E2-R variable names
-
-# variables we don't need
-
-# pdcld : Deep convective cloud cover
-# mccltp : Convective cloud top pressure
-# mccldbs = convective cloud base pressure
-# TMAXC - SURFACE AIR TEMPERATURE (DIURNAL MAX)
-# TMINC - SURFACE AIR TEMPERATURE (DIURNAL MIN)
-# TMNMX - SURFC AIR TEMPERATURE (LOWEST DIURNAL HIGH)
-
 # variables we need
 
 # tsurf - surface air temperature (degC)
@@ -26,18 +15,18 @@
 # wetd - number of days with > 0.1mm precipitation (days)
 
 # paleo file names
-varnamesp=(tsurf dtdiurn preacc wetd wsurf pcldt lightning)
+varnamesp=(tas dtr preacc wetd sfcWind clt lightning)
 
 # baseline file names
-varnamesb=(tas dtr preacc wetdays sfcWind clt lightning)
+varnamesb=(tas dtr preacc wetd sfcWind clt lightning)
 
-prefixp=/group/esd_kaplan/datasets/ModelE/climategenerator_data/4xCO2/rawdata/climean
-prefixb=/group/esd_kaplan/datasets/ModelE/climategenerator_data/climatology_1961-1990
-prefixo=/group/esd_kaplan/datasets/ModelE/climategenerator_data/4xCO2/anomalies_1961-1990
+prefixp=/group/esd_kaplan/datasets/ModelE/climategenerator_data/CMIP6_lgm/MPI-ESM1-2-LR/rawdata/climean/
+prefixb=/group/esd_kaplan/datasets/ModelE/climategenerator_data/climatology_1961-1990/cmip6/
+prefixo=/group/esd_kaplan/datasets/ModelE/climategenerator_data/CMIP6_lgm/MPI-ESM1-2-LR/anomalies_1961-1990/
 
-suffix6190=_GISS-E2-R_climatology_1961-1990.nc
-suffixpaleo=_CEN_Clim_2900-2999.aijE2p1_anl_4xCO2.nc
-suffixo=_GISS-E2-R_anomaly.nc
+suffix6190=_MPI-ESM1-2-LR_climatology_1961-1990.nc
+suffixpaleo=_MPI-ESM1-2-LR_climatology.nc
+suffixo=_MPI-ESM1-2-LR_anomaly.nc
 
 # generate anomalies
 
@@ -53,6 +42,6 @@ done
 
 # interpolate anomalies to 30 minute (bilinear interpolation ok)
 
-sh interpolate.sh $prefixo $suffixo
+sh /home/akoch/scripts/LPJ_climategenerator/tools/interpolate.sh $prefixo $suffixo
 
 # run script interpolate.sh

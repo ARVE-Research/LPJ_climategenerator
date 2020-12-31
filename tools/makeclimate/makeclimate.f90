@@ -3,6 +3,9 @@ program makeclimate
 ! gcc -Difort -c overprint.c
 ! ifort -xHost -o makeclimate randomdistmod.f90 makeclimate.f90 overprint.o -I/usr/local/include -L/usr/local/lib -lnetcdff -lnetcdf
 ! ifort -xHost -o makeclimate randomdistmod.f90 makeclimate.f90 overprint.o -I/share1/netcdf/4.7.1-impi/include -L/share1/netcdf/4.7.1-impi/lib -lnetcdff -lnetcdf
+! gfortran -O3 -o makeclimate randomdistmod.f90 makeclimate.f90 overprint.o -I/home/public/easybuild/software/netCDF-Fortran/4.5.2-gompi-2020a/include -L/home/public/easybuild/software/netCDF-Fortran/4.5.2-gompi-2020a/lib -lnetcdff -lnetcdf
+
+! ./makeclimate 
 
 !program to generate a climatology of arbitrary length by randomly selecting ycyc-year blocks of climate from the
 !20th century reanalysis dataset
@@ -18,6 +21,7 @@ integer, parameter :: sp = selected_real_kind(4)
 integer, parameter :: dp = selected_real_kind(13)
 
 integer(i2), parameter :: missing = -32768
+real(sp), parameter :: missing_lightning = -32768.
 
 integer, parameter :: xlen = 720
 integer, parameter :: ylen = 360
@@ -52,12 +56,15 @@ integer :: m
 integer, dimension(12) :: nd
 
 integer(2), dimension(2) :: valid_range
+real(dp),   dimension(2) :: valid_range_lightning
 real(dp),   dimension(2) :: actual_range
 
 real(sp),    allocatable, dimension(:,:,:) :: anom
 real(sp),    allocatable, dimension(:,:,:) :: rbase
 integer(i2), allocatable, dimension(:,:,:) :: base
+real(sp),    allocatable, dimension(:,:,:) :: base_lightning
 integer(i2), allocatable, dimension(:,:,:) :: vout
+real(sp),    allocatable, dimension(:,:,:) :: vout_lightning
 
 real(sp) :: scale_factor
 
@@ -213,9 +220,11 @@ if (status /= nf90_noerr) call handle_err(status)
 !inquire dimensions and allocate arrays
 
 allocate(base(xlen,ylen,12))
+allocate(base_lightning(xlen,ylen,12))
 allocate(rbase(xlen,ylen,12))
 allocate(anom(xlen,ylen,1680))
 allocate(vout(xlen,ylen,tlen))
+allocate(vout_lightning(xlen,ylen,tlen))
 
 !----------------------------------------------------------------------------
 !time
@@ -791,7 +800,7 @@ write(0,*)'reading lightning'
 status = nf90_inq_varid(bfid,'lght',varid)
 if (status /= nf90_noerr) call handle_err(status)
 
-status = nf90_get_var(bfid,varid,base)
+status = nf90_get_var(bfid,varid,base_lightning)
 if (status /= nf90_noerr) call handle_err(status)
 
 status = nf90_get_att(bfid,varid,'scale_factor',scale_factor)
@@ -816,16 +825,16 @@ if (status /= nf90_noerr) call handle_err(status)
 
 !----
 
-valid_range = 0
+valid_range_lightning = 0.
 
 status = nf90_inq_varid(ofid,'lght',varid)
 if (status /= nf90_noerr) call handle_err(status)
 
-rbase = real(base) * scale_factor + add_offset
+rbase = base_lightning * scale_factor + add_offset
 
 write(0,'(a,2f8.5)')' calculating',scale_factor,add_offset
 
-vout = missing
+vout_lightning = missing_lightning
 
 !work in blocks of 30 years
 
@@ -838,7 +847,7 @@ do j = 1,numcyc
   do y = 1,ylen
     do x = 1,xlen
 
-      if (any(base(x,y,:) /= missing)) then
+      if (any(base_lightning(x,y,:) /= missing_lightning)) then
 
         limit = max(abs(maxval(anom(x,y,:))),abs(minval(anom(x,y,:)))) !absolute maximum magnitude of CAPE anomaly
 
@@ -862,12 +871,12 @@ do j = 1,numcyc
             lanom = rbase(x,y,:) * (lrs * cape + 1.)
           end where
 
-          vout(x,y,i:11+i) = nint((max(0.,lanom) - add_offset) / scale_factor)
+          vout_lightning(x,y,i:11+i) = (max(0.,lanom) - add_offset) / scale_factor
 
         end do
       else
 
-        vout(x,y,:) = nint((0. - add_offset) / scale_factor)
+        vout_lightning(x,y,:) = (0. - add_offset) / scale_factor
 
       end if
     end do
@@ -878,18 +887,18 @@ do j = 1,numcyc
  write(status_msg,*)'writing block',j,seg(j),k,m
  call overprint(status_msg)
 
-  status = nf90_put_var(ofid,varid,vout,start=[1,1,m],count=[xlen,ylen,tlen])
+  status = nf90_put_var(ofid,varid,vout_lightning,start=[1,1,m],count=[xlen,ylen,tlen])
   if (status /= nf90_noerr) call handle_err(status)
 
-  valid_range(1) = min(valid_range(1),minval(vout,mask = vout /= missing))
-  valid_range(2) = max(valid_range(2),maxval(vout,mask = vout /= missing))
+  valid_range_lightning(1) = minval(vout_lightning,mask = vout_lightning /= missing_lightning)
+  valid_range_lightning(2) = maxval(vout_lightning,mask = vout_lightning /= missing_lightning)
 
 end do
 
 write(0,*)
-write(0,'(a,2f6.1)')' writing valid range',real(valid_range) * scale_factor + add_offset
+write(0,'(a,2f6.1)')' writing valid range',valid_range_lightning ! * scale_factor + add_offset
 
-status = nf90_put_att(ofid,varid,'valid_range',valid_range)
+status = nf90_put_att(ofid,varid,'valid_range',valid_range_lightning)
 if (status /= nf90_noerr) call handle_err(status)
 
 !----------------------------------------------------------------------------

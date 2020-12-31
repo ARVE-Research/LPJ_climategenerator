@@ -2,7 +2,7 @@
 
 template=climate_template.cdl
 
-tlen=360
+tlen=1020
 
 jobfile=${1}
 output=${2}

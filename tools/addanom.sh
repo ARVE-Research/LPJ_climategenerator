@@ -1,13 +1,13 @@
 #!/bin/bash
 
-title=GISS_E2R_climatology_021ka
+title=${1}
 
-jobfile=/group/esd_kaplan//datasets/ModelE/climategenerator_data/006ka/giss021ka.namelist
-outfile=/group/esd_kaplan//datasets/ModelE/climategenerator_data/006ka/baseline/$title.nc
+jobfile=${2}
+outfile=${3}
 
 # generate an empty output file with the same format as the baseline file
 
-sed 's/TITLE/$title/g' lpj_climate_input_30m.cdl > tmp.cdl
+sed "s/TITLE/$title/g" lpj_climate_input_30m.cdl > tmp.cdl
 
 ncgen -o $outfile tmp.cdl
 
